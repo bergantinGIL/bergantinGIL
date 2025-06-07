@@ -1,0 +1,10 @@
+/ip hotspot active
+:foreach user in=[/ip hotspot active find] do={
+    :local username [/ip hotspot active get $user user];
+    :local userExpiry [/ip hotspot user get $username limit-uptime];
+    :local nowTime [/system clock get time];
+    :if ($nowTime > $userExpiry) do={
+        /ip hotspot active remove $user;  # Disconnect the user
+        /log info message=("Disconnected " . $username . " due to unpaid subscription.");
+    }
+}
